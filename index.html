@@ -7,216 +7,117 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   :root {
-    --bg: #0f1117;
-    --surface: #181c26;
-    --card: #1e2333;
-    --card-hover: #252b3d;
-    --border: rgba(255,255,255,0.07);
-    --border-hover: rgba(255,255,255,0.18);
-    --accent: #c8a96e;
-    --accent2: #e8c98a;
-    --text: #e8e6e0;
-    --muted: #7a7d8a;
-    --success: #3ecf8e;
-    --gold-glow: rgba(200,169,110,0.15);
-    --sidebar-w: 270px;
+    --bg: #0f1117; --surface: #181c26; --card: #1e2333; --card-hover: #252b3d;
+    --border: rgba(255,255,255,0.07); --border-hover: rgba(255,255,255,0.18);
+    --accent: #c8a96e; --accent2: #e8c98a; --text: #e8e6e0; --muted: #7a7d8a;
+    --success: #3ecf8e; --gold-glow: rgba(200,169,110,0.15); --sidebar-w: 270px;
   }
-
   body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Source Sans 3', sans-serif;
-    font-weight: 300;
-    min-height: 100vh;
-    overflow-x: hidden;
+    background: var(--bg); color: var(--text);
+    font-family: 'Source Sans 3', sans-serif; font-weight: 300;
+    min-height: 100vh; overflow-x: hidden;
   }
-
   body::before {
-    content: '';
-    position: fixed; inset: 0;
-    background-image:
-      linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
-    background-size: 48px 48px;
-    pointer-events: none; z-index: 0;
+    content: ''; position: fixed; inset: 0;
+    background-image: linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+    background-size: 48px 48px; pointer-events: none; z-index: 0;
   }
+  .layout { position: relative; z-index: 1; display: flex; min-height: 100vh; }
+  .main { flex: 1; min-width: 0; display: flex; flex-direction: column; margin-right: var(--sidebar-w); }
 
-  .layout {
-    position: relative; z-index: 1;
-    display: flex; min-height: 100vh;
-  }
-
-  /* ── MAIN ── */
-  .main {
-    flex: 1; min-width: 0;
-    display: flex; flex-direction: column;
-    margin-right: var(--sidebar-w);
-  }
-
-  header {
-    padding: 2rem 2.5rem 1.25rem;
-    border-bottom: 1px solid var(--border);
-    display: flex; align-items: flex-end;
-    justify-content: space-between; gap: 1rem;
-  }
-  .header-left h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.75rem; color: var(--accent);
-  }
-  .header-left p {
-    margin-top: 0.3rem; font-size: 0.78rem;
-    color: var(--muted); letter-spacing: 0.04em; text-transform: uppercase;
-  }
+  /* HEADER */
+  header { padding: 1.5rem 2.5rem 1rem; border-bottom: 1px solid var(--border); display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; }
+  .header-left h1 { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--accent); }
+  .header-left p { margin-top: 0.3rem; font-size: 0.78rem; color: var(--muted); letter-spacing: 0.04em; text-transform: uppercase; }
   .stats { display: flex; gap: 1.75rem; align-items: flex-end; }
   .stat { text-align: right; }
-  .stat-num {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.6rem; line-height: 1; color: var(--accent);
-  }
+  .stat-num { font-family: 'Playfair Display', serif; font-size: 1.6rem; line-height: 1; color: var(--accent); }
   .stat-num.green { color: var(--success); }
   .stat-label { font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 2px; }
 
-  /* ── ALERT ── */
-  .alert-bar {
-    display: none; align-items: center; gap: 0.75rem;
-    padding: 0.7rem 2.5rem;
-    background: rgba(62,207,142,0.07);
-    border-bottom: 1px solid rgba(62,207,142,0.18);
-    animation: slideDown 0.3s ease;
-  }
-  .alert-bar.visible { display: flex; }
-  @keyframes slideDown {
-    from { opacity: 0; transform: translateY(-6px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-  .alert-dot {
-    width: 8px; height: 8px; border-radius: 50%;
-    background: var(--success); box-shadow: 0 0 8px var(--success); flex-shrink: 0;
-  }
+  /* ALERT */
+  .alert-bar { display: none; align-items: center; gap: 0.75rem; padding: 0.7rem 2.5rem; background: rgba(62,207,142,0.07); border-bottom: 1px solid rgba(62,207,142,0.18); }
+  .alert-bar.visible { display: flex; animation: slideDown 0.3s ease; }
+  @keyframes slideDown { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+  .alert-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); box-shadow: 0 0 8px var(--success); flex-shrink: 0; }
   .alert-text { font-size: 0.85rem; }
   .alert-text strong { color: var(--success); }
 
-  /* ── GRID ── */
-  .grid-wrap { padding: 1.75rem 2.5rem 3rem; }
-  .grid-label {
-    font-size: 0.7rem; text-transform: uppercase;
-    letter-spacing: 0.1em; color: var(--muted); margin-bottom: 1.1rem;
-  }
-  .tickets-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));
-    gap: 10px;
-  }
+  /* GRID */
+  .grid-wrap { padding: 1.5rem 2.5rem 3rem; }
+  .grid-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 1.1rem; }
+  .tickets-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 10px; }
 
-  /* ── CARD ── */
+  /* CARD — no number shown, just ? */
   .ticket-card {
-    aspect-ratio: 2/3;
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 10px; cursor: pointer;
-    display: flex; flex-direction: column;
+    aspect-ratio: 2/3; background: var(--card); border: 1px solid var(--border);
+    border-radius: 10px; cursor: pointer; display: flex; flex-direction: column;
     align-items: center; justify-content: center; gap: 5px;
     position: relative; overflow: hidden;
     transition: background 0.18s, border-color 0.18s, transform 0.14s, box-shadow 0.18s, opacity 0.4s, transform 0.4s;
   }
   .ticket-card::before {
     content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-    background: linear-gradient(90deg, var(--accent), var(--accent2));
-    opacity: 0; transition: opacity 0.18s;
+    background: linear-gradient(90deg, var(--accent), var(--accent2)); opacity: 0; transition: opacity 0.18s;
   }
-  .ticket-card:hover {
-    background: var(--card-hover); border-color: var(--border-hover);
-    transform: translateY(-3px);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.4), 0 0 0 1px rgba(200,169,110,0.1);
-  }
+  .ticket-card:hover { background: var(--card-hover); border-color: var(--border-hover); transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
   .ticket-card:hover::before { opacity: 1; }
   .ticket-card:active { transform: scale(0.96); }
-
-  .ticket-card.vanishing {
-    opacity: 0 !important;
-    transform: scale(0.75) !important;
-    pointer-events: none;
-  }
+  .ticket-card.vanishing { opacity: 0 !important; transform: scale(0.75) !important; pointer-events: none; }
   .ticket-card.gone { display: none; }
-
-  .card-num {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.45rem; color: var(--accent); line-height: 1;
-  }
+  .card-question { font-size: 2rem; color: var(--accent); line-height: 1; }
   .card-word { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); }
-  .card-deco {
-    position: absolute; bottom: 9px; left: 50%; transform: translateX(-50%);
-    display: flex; flex-direction: column; gap: 3px; align-items: center;
-  }
+  .card-deco { position: absolute; bottom: 9px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; gap: 3px; align-items: center; }
   .card-deco span { display: block; height: 1px; background: var(--border); }
   .card-deco span:nth-child(1) { width: 26px; }
   .card-deco span:nth-child(2) { width: 16px; }
 
-  /* ── MODAL ── */
-  .overlay {
-    display: none; position: fixed; inset: 0;
-    background: rgba(0,0,0,0.75); backdrop-filter: blur(4px);
-    z-index: 100; align-items: center; justify-content: center;
+  /* NAME SCREEN */
+  .name-screen {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(6px);
+    z-index: 200; display: flex; align-items: center; justify-content: center;
   }
-  .overlay.open { display: flex; }
-  .modal {
+  .name-screen.hidden { display: none; }
+  .name-box {
     background: var(--surface); border: 1px solid var(--border-hover);
-    border-radius: 16px; padding: 2.25rem;
-    max-width: 400px; width: 90%; text-align: center;
-    animation: popIn 0.28s cubic-bezier(0.34,1.56,0.64,1);
+    border-radius: 16px; padding: 2.5rem; max-width: 420px; width: 90%; text-align: center;
+    animation: popIn 0.3s cubic-bezier(0.34,1.56,0.64,1);
   }
-  @keyframes popIn {
-    from { opacity: 0; transform: scale(0.85); }
-    to   { opacity: 1; transform: scale(1); }
+  @keyframes popIn { from { opacity: 0; transform: scale(0.85); } to { opacity: 1; transform: scale(1); } }
+  .name-box h2 { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--accent); margin-bottom: 0.4rem; }
+  .name-box p { font-size: 0.82rem; color: var(--muted); margin-bottom: 1.5rem; }
+  .name-input {
+    width: 100%; padding: 0.75rem 1rem; font-size: 1rem; font-family: 'Source Sans 3', sans-serif;
+    background: rgba(255,255,255,0.05); border: 1px solid var(--border-hover);
+    border-radius: 8px; color: var(--text); margin-bottom: 1rem; outline: none;
+    transition: border-color 0.15s;
   }
-  .modal-icon {
-    width: 68px; height: 68px; border-radius: 50%;
-    background: var(--gold-glow); border: 1px solid rgba(200,169,110,0.3);
-    display: flex; align-items: center; justify-content: center; margin: 0 auto 1.1rem;
-  }
-  .modal-num {
-    font-family: 'Playfair Display', serif;
-    font-size: 3.2rem; color: var(--accent); line-height: 1; margin-bottom: 0.2rem;
-  }
-  .modal-label { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); margin-bottom: 1.25rem; }
-  .modal-filename {
-    font-size: 0.82rem; color: var(--muted);
-    background: rgba(255,255,255,0.04); border: 1px solid var(--border);
-    border-radius: 6px; padding: 0.45rem 1rem;
-    display: inline-block; font-family: monospace; margin-bottom: 1.5rem;
-  }
-  .btn-download {
-    display: inline-flex; align-items: center; gap: 9px; justify-content: center;
-    width: 100%; background: var(--accent); color: #0f1117;
+  .name-input:focus { border-color: var(--accent); }
+  .btn-start {
+    width: 100%; padding: 0.75rem; background: var(--accent); color: #0f1117;
     font-family: 'Source Sans 3', sans-serif; font-weight: 600; font-size: 0.95rem;
-    padding: 0.7rem 2rem; border-radius: 8px; border: none;
-    cursor: pointer; text-decoration: none;
-    transition: background 0.15s, transform 0.1s; margin-bottom: 0.75rem;
+    border: none; border-radius: 8px; cursor: pointer; transition: background 0.15s;
   }
-  .btn-download:hover { background: var(--accent2); }
-  .btn-download:active { transform: scale(0.97); }
-  .btn-download svg { width: 17px; height: 17px; flex-shrink: 0; }
-  .btn-close {
-    display: block; width: 100%; padding: 0.55rem;
-    background: transparent; border: 1px solid var(--border);
-    border-radius: 8px; color: var(--muted);
-    font-family: 'Source Sans 3', sans-serif; font-size: 0.83rem;
-    cursor: pointer; transition: border-color 0.15s, color 0.15s;
-  }
-  .btn-close:hover { border-color: var(--border-hover); color: var(--text); }
+  .btn-start:hover { background: var(--accent2); }
+  .btn-start:disabled { opacity: 0.4; cursor: not-allowed; }
 
-  /* ── SIDEBAR ── */
-  .sidebar {
-    position: fixed; top: 0; right: 0; bottom: 0;
-    width: var(--sidebar-w);
-    background: var(--surface); border-left: 1px solid var(--border);
-    display: flex; flex-direction: column; z-index: 10;
-  }
-  .sidebar-header {
-    padding: 1.5rem 1.25rem 1rem;
-    border-bottom: 1px solid var(--border); flex-shrink: 0;
-  }
+  /* MODAL */
+  .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(4px); z-index: 100; align-items: center; justify-content: center; }
+  .overlay.open { display: flex; }
+  .modal { background: var(--surface); border: 1px solid var(--border-hover); border-radius: 16px; padding: 2.25rem; max-width: 400px; width: 90%; text-align: center; animation: popIn 0.28s cubic-bezier(0.34,1.56,0.64,1); }
+  .modal-icon { width: 68px; height: 68px; border-radius: 50%; background: var(--gold-glow); border: 1px solid rgba(200,169,110,0.3); display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; }
+  .modal-student { font-size: 0.8rem; color: var(--muted); margin-bottom: 0.5rem; letter-spacing: 0.04em; }
+  .modal-num { font-family: 'Playfair Display', serif; font-size: 3.5rem; color: var(--accent); line-height: 1; margin-bottom: 0.2rem; }
+  .modal-label { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); margin-bottom: 1.25rem; }
+  .modal-filename { font-size: 0.82rem; color: var(--muted); background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 6px; padding: 0.45rem 1rem; display: inline-block; font-family: monospace; margin-bottom: 1.5rem; }
+  .btn-download { display: inline-flex; align-items: center; gap: 9px; justify-content: center; width: 100%; background: var(--accent); color: #0f1117; font-family: 'Source Sans 3', sans-serif; font-weight: 600; font-size: 0.95rem; padding: 0.7rem 2rem; border-radius: 8px; border: none; cursor: pointer; text-decoration: none; transition: background 0.15s; margin-bottom: 0.75rem; }
+  .btn-download:hover { background: var(--accent2); }
+  .btn-download svg { width: 17px; height: 17px; flex-shrink: 0; }
+
+  /* SIDEBAR */
+  .sidebar { position: fixed; top: 0; right: 0; bottom: 0; width: var(--sidebar-w); background: var(--surface); border-left: 1px solid var(--border); display: flex; flex-direction: column; z-index: 10; }
+  .sidebar-header { padding: 1.5rem 1.25rem 1rem; border-bottom: 1px solid var(--border); flex-shrink: 0; }
   .sidebar-title { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 0.75rem; }
   .sidebar-counts { display: flex; gap: 1rem; }
   .sc-item { flex: 1; }
@@ -224,61 +125,45 @@
   .sc-num.gold { color: var(--accent); }
   .sc-num.green { color: var(--success); }
   .sc-label { font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
-  .sidebar-list-label {
-    padding: 0.75rem 1.25rem 0.4rem;
-    font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); flex-shrink: 0;
-  }
-  .log-entries {
-    flex: 1; overflow-y: auto; padding: 0 0.75rem 1rem;
-    display: flex; flex-direction: column; gap: 5px;
-  }
+  .sidebar-list-label { padding: 0.75rem 1.25rem 0.4rem; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); flex-shrink: 0; }
+  .log-entries { flex: 1; overflow-y: auto; padding: 0 0.75rem 1rem; display: flex; flex-direction: column; gap: 5px; }
   .log-entries::-webkit-scrollbar { width: 4px; }
   .log-entries::-webkit-scrollbar-thumb { background: var(--border-hover); border-radius: 4px; }
   .log-empty { color: var(--muted); font-size: 0.78rem; font-style: italic; padding: 0.5rem; }
-  .log-entry {
-    display: flex; align-items: center; gap: 8px;
-    padding: 0.5rem 0.75rem; border-radius: 7px;
-    background: rgba(255,255,255,0.03); border: 1px solid var(--border);
-    animation: entryIn 0.3s ease;
-  }
-  @keyframes entryIn {
-    from { opacity: 0; transform: translateX(10px); }
-    to   { opacity: 1; transform: translateX(0); }
-  }
-  .log-badge {
-    background: var(--gold-glow); border: 1px solid rgba(200,169,110,0.25);
-    border-radius: 5px; padding: 2px 7px;
-    font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--accent);
-    flex-shrink: 0; min-width: 38px; text-align: center;
-  }
+  .log-entry { display: flex; align-items: center; gap: 8px; padding: 0.5rem 0.75rem; border-radius: 7px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); animation: entryIn 0.3s ease; }
+  @keyframes entryIn { from { opacity: 0; transform: translateX(10px); } to { opacity: 1; transform: translateX(0); } }
+  .log-badge { background: var(--gold-glow); border: 1px solid rgba(200,169,110,0.25); border-radius: 5px; padding: 2px 7px; font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--accent); flex-shrink: 0; min-width: 38px; text-align: center; }
   .log-meta { flex: 1; min-width: 0; }
-  .log-file { font-size: 0.7rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .log-time { font-size: 0.65rem; color: var(--muted); opacity: 0.6; margin-top: 1px; }
-  .sidebar-footer {
-    padding: 0.75rem 1.25rem; border-top: 1px solid var(--border); flex-shrink: 0;
-  }
-  .btn-reset {
-    width: 100%; padding: 0.5rem; background: transparent;
-    border: 1px solid var(--border); border-radius: 7px; color: var(--muted);
-    font-family: 'Source Sans 3', sans-serif; font-size: 0.78rem;
-    cursor: pointer; transition: border-color 0.15s, color 0.15s;
-  }
+  .log-name { font-size: 0.78rem; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .log-time { font-size: 0.65rem; color: var(--muted); margin-top: 1px; }
+  .sidebar-footer { padding: 0.75rem 1.25rem; border-top: 1px solid var(--border); flex-shrink: 0; }
+  .btn-reset { width: 100%; padding: 0.5rem; background: transparent; border: 1px solid var(--border); border-radius: 7px; color: var(--muted); font-family: 'Source Sans 3', sans-serif; font-size: 0.78rem; cursor: pointer; transition: border-color 0.15s, color 0.15s; }
   .btn-reset:hover { border-color: rgba(255,100,100,0.4); color: #ff8080; }
 </style>
 </head>
 <body>
-<div class="layout">
 
+<!-- NAME ENTRY SCREEN -->
+<div class="name-screen" id="name-screen">
+  <div class="name-box">
+    <h2>Емтихан</h2>
+    <p>Билет таңдамас бұрын аты-жөніңізді енгізіңіз<br><span style="font-size:0.75rem;opacity:0.6">Введите ФИО перед выбором билета</span></p>
+    <input class="name-input" id="name-input" type="text" placeholder="Иванов Иван Иванович" autocomplete="name" />
+    <button class="btn-start" id="btn-start" disabled onclick="startExam()">Кіру / Войти →</button>
+  </div>
+</div>
+
+<div class="layout">
   <!-- MAIN -->
   <div class="main">
     <header>
       <div class="header-left">
         <h1>Емтихан билеттері</h1>
-        <p>Картаны басыңыз — файл автоматты жүктеледі</p>
+        <p id="student-name-header">Билетті таңдаңыз</p>
       </div>
       <div class="stats">
         <div class="stat">
-          <div class="stat-num" id="stat-remaining">60</div>
+          <div class="stat-num" id="stat-remaining">80</div>
           <div class="stat-label">қалды</div>
         </div>
         <div class="stat">
@@ -296,7 +181,7 @@
     </div>
 
     <div class="grid-wrap">
-      <div class="grid-label">Билетті таңдаңыз</div>
+      <div class="grid-label">Билетті таңдаңыз — картаны басыңыз</div>
       <div class="tickets-grid" id="grid"></div>
     </div>
   </div>
@@ -311,7 +196,7 @@
           <div class="sc-label">берілді</div>
         </div>
         <div class="sc-item">
-          <div class="sc-num green" id="sc-remaining">60</div>
+          <div class="sc-num green" id="sc-remaining">80</div>
           <div class="sc-label">қалды</div>
         </div>
       </div>
@@ -324,10 +209,9 @@
       <button class="btn-reset" onclick="resetAll()">↺ Сбросить всё</button>
     </div>
   </div>
-
 </div>
 
-<!-- MODAL -->
+<!-- MODAL: ticket reveal -->
 <div class="overlay" id="overlay">
   <div class="modal">
     <div class="modal-icon">
@@ -338,89 +222,144 @@
         <line x1="9" y1="15" x2="15" y2="15"/>
       </svg>
     </div>
-    <div class="modal-num" id="modal-num">01</div>
+    <div class="modal-student" id="modal-student"></div>
+    <div class="modal-num" id="modal-num">?</div>
     <div class="modal-label">Сіздің емтихан билетіңіз</div>
-    <div class="modal-filename" id="modal-filename">Емтихан_билеті_01.docx</div>
-    <a class="btn-download" id="btn-download" href="#" download>
+    <div class="modal-filename" id="modal-filename"></div>
+    <button class="btn-download" id="btn-download">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
         <polyline points="7 10 12 15 17 10"/>
         <line x1="12" y1="15" x2="12" y2="3"/>
       </svg>
-      Жүктеу / Скачать
-    </a>
-    <button class="btn-close" id="btn-close">Жабу / Закрыть</button>
+      Жүктеу / Скачать билет
+    </button>
   </div>
 </div>
 
-<script>
-  const TOTAL = 60;
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+  import { getDatabase, ref, onValue, update, remove } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
+
+  const firebaseConfig = { databaseURL: 'https://mapicc-99567-default-rtdb.firebaseio.com' };
+  const app = initializeApp(firebaseConfig);
+  const db  = getDatabase(app);
+
+  const TOTAL = 80;
   const taken = new Set();
+  const logged = new Set();
   let currentNum = null;
+  let studentName = '';
   let alertTimer = null;
 
-  const grid        = document.getElementById('grid');
-  const overlay     = document.getElementById('overlay');
-  const modalNum    = document.getElementById('modal-num');
-  const modalFn     = document.getElementById('modal-filename');
-  const btnDownload = document.getElementById('btn-download');
-  const btnClose    = document.getElementById('btn-close');
-  const alertBar    = document.getElementById('alert-bar');
-  const alertTitle  = document.getElementById('alert-title');
-  const alertTime   = document.getElementById('alert-time');
-  const logEntries  = document.getElementById('log-entries');
+  // DOM refs
+  const nameScreen   = document.getElementById('name-screen');
+  const nameInput    = document.getElementById('name-input');
+  const btnStart     = document.getElementById('btn-start');
+  const grid         = document.getElementById('grid');
+  const overlay      = document.getElementById('overlay');
+  const modalNum     = document.getElementById('modal-num');
+  const modalFn      = document.getElementById('modal-filename');
+  const modalStudent = document.getElementById('modal-student');
+  const btnDownload  = document.getElementById('btn-download');
+  const alertBar     = document.getElementById('alert-bar');
+  const alertTitle   = document.getElementById('alert-title');
+  const alertTime    = document.getElementById('alert-time');
+  const logEntries   = document.getElementById('log-entries');
+
+  // Enable start button only when name is entered
+  nameInput.addEventListener('input', () => {
+    btnStart.disabled = nameInput.value.trim().length < 2;
+  });
+  nameInput.addEventListener('keydown', e => { if (e.key === 'Enter' && !btnStart.disabled) startExam(); });
+
+  window.startExam = function() {
+    studentName = nameInput.value.trim();
+    if (!studentName) return;
+    nameScreen.classList.add('hidden');
+    document.getElementById('student-name-header').textContent = studentName;
+  };
 
   function pad(n) { return n < 10 ? '0' + n : '' + n; }
-  function filename(n) { return 'Емтихан_билеті_' + pad(n) + '.docx'; }
+  function filename(n) { return 'https://raw.githubusercontent.com/ffffbbee/dsdsds/main/%D0%93%D1%80%D1%83%D0%BF%D0%BF%D0%B02/%D0%95%D0%BC%D1%82%D0%B8%D1%85%D0%B0%D0%BD_%D0%B1%D0%B8%D0%BB%D0%B5%D1%82%D1%96_' + pad(n) + '.docx'; }
+  function displayName(n) { return 'Емтихан_билеті_' + pad(n) + '.docx'; }
 
-  // Build grid
+  // Build grid — cards show ? not number
   for (let i = 1; i <= TOTAL; i++) {
     const card = document.createElement('div');
     card.className = 'ticket-card';
     card.id = 'card-' + i;
-    card.innerHTML = `
-      <div class="card-num">${pad(i)}</div>
-      <div class="card-word">Билет</div>
-      <div class="card-deco"><span></span><span></span></div>`;
+    card.innerHTML = '<div class="card-question">?</div><div class="card-word">Билет</div><div class="card-deco"><span></span><span></span></div>';
     card.addEventListener('click', () => openTicket(i));
     grid.appendChild(card);
   }
 
+  // Firebase realtime sync — ALL screens update instantly
+  onValue(ref(db, 'taken'), (snapshot) => {
+    const data = snapshot.val() || {};
+    const serverTaken = new Set(Object.keys(data).map(Number));
+
+    serverTaken.forEach(num => {
+      if (!taken.has(num)) {
+        taken.add(num);
+        vanishCard(num);
+        const entry = data[num];
+        addLog(num, entry ? entry.name : '—', entry ? entry.time : '');
+      }
+    });
+
+    taken.forEach(num => {
+      if (!serverTaken.has(num)) {
+        taken.delete(num);
+        logged.delete(num);
+        const card = document.getElementById('card-' + num);
+        if (card) card.classList.remove('vanishing', 'gone');
+      }
+    });
+
+    updateCounts();
+  });
+
   function openTicket(num) {
+    if (taken.has(num)) return;
+    if (!studentName) { nameScreen.classList.remove('hidden'); return; }
     currentNum = num;
-    const fn = filename(num);
-    modalNum.textContent = pad(num);
-    modalFn.textContent = fn;
-    btnDownload.setAttribute('href', fn);
-    btnDownload.setAttribute('download', fn);
+    // Show ? first, then reveal number with animation
+    modalNum.textContent = '?';
+    modalStudent.textContent = studentName;
+    modalFn.textContent = '';
     overlay.classList.add('open');
+    // Dramatic reveal after 600ms
+    setTimeout(() => {
+      modalNum.textContent = pad(num);
+      modalFn.textContent = displayName(num);
+      modalNum.style.animation = 'none';
+      modalNum.offsetHeight; // reflow
+      modalNum.style.animation = 'popIn 0.4s cubic-bezier(0.34,1.56,0.64,1)';
+    }, 600);
   }
 
   function closeModal() { overlay.classList.remove('open'); }
 
-  function closeAndTake() {
-    const num = currentNum;
-    if (!num || taken.has(num)) { closeModal(); return; }
-    taken.add(num);
-    vanishCard(num);
-    updateCounts();
+  async function takeTicket(num) {
+    if (!num || taken.has(num)) return;
+    const t = new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    const date = new Date().toLocaleDateString('ru-RU');
+    await update(ref(db, 'taken/' + num), {
+      name: studentName,
+      time: t,
+      date: date,
+      ticket: pad(num)
+    });
     showAlert(num);
-    addLog(num);
-    closeModal();
   }
-
-  btnClose.addEventListener('click', closeAndTake);
-  overlay.addEventListener('click', e => { if (e.target === overlay) closeAndTake(); });
 
   btnDownload.addEventListener('click', () => {
     const num = currentNum;
     if (!num || taken.has(num)) return;
-    taken.add(num);
-    vanishCard(num);
-    updateCounts();
-    showAlert(num);
-    addLog(num);
-    setTimeout(() => overlay.classList.remove('open'), 500);
+    window.open(filename(num), '_blank');
+    takeTicket(num);
+    setTimeout(closeModal, 600);
   });
 
   function vanishCard(num) {
@@ -432,44 +371,45 @@
 
   function updateCounts() {
     const t = taken.size, r = TOTAL - t;
-    document.getElementById('stat-taken').textContent    = t;
+    document.getElementById('stat-taken').textContent     = t;
     document.getElementById('stat-remaining').textContent = r;
-    document.getElementById('sc-taken').textContent      = t;
-    document.getElementById('sc-remaining').textContent  = r;
+    document.getElementById('sc-taken').textContent       = t;
+    document.getElementById('sc-remaining').textContent   = r;
   }
 
   function showAlert(num) {
     if (alertTimer) clearTimeout(alertTimer);
     const t = new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-    alertTitle.textContent = 'Билет № ' + pad(num) + ' — берілді';
+    alertTitle.textContent = studentName + ' — Билет № ' + pad(num);
     alertTime.textContent  = t;
     alertBar.classList.add('visible');
-    alertTimer = setTimeout(() => alertBar.classList.remove('visible'), 5000);
+    alertTimer = setTimeout(() => alertBar.classList.remove('visible'), 6000);
   }
 
-  function addLog(num) {
+  function addLog(num, name, time) {
+    if (logged.has(num)) return;
+    logged.add(num);
     const empty = document.getElementById('log-empty');
     if (empty) empty.remove();
-    const t = new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
     const entry = document.createElement('div');
     entry.className = 'log-entry';
-    entry.innerHTML = `
-      <div class="log-badge">${pad(num)}</div>
-      <div class="log-meta">
-        <div class="log-file">${filename(num)}</div>
-        <div class="log-time">${t}</div>
-      </div>`;
+    entry.id = 'log-' + num;
+    entry.innerHTML =
+      '<div class="log-badge">' + pad(num) + '</div>' +
+      '<div class="log-meta">' +
+        '<div class="log-name">' + name + '</div>' +
+        '<div class="log-time">' + time + '</div>' +
+      '</div>';
     logEntries.prepend(entry);
   }
 
-  function resetAll() {
+  window.resetAll = async function() {
     if (!confirm('Сбросить список и показать все билеты снова?')) return;
-    taken.clear();
-    document.querySelectorAll('.ticket-card').forEach(c => c.classList.remove('vanishing', 'gone'));
-    updateCounts();
+    await remove(ref(db, 'taken'));
+    logged.clear();
     logEntries.innerHTML = '<div class="log-empty" id="log-empty">Әлі ешкім таңдаған жоқ</div>';
     alertBar.classList.remove('visible');
-  }
+  };
 </script>
 </body>
 </html>

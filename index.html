@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>Емтихан билеттері</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
@@ -244,7 +247,7 @@
 
 <script type="module">
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-  import { getDatabase, ref, onValue, update, remove } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
+  import { getDatabase, ref, onValue, update, remove, get } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
 
   const firebaseConfig = { databaseURL: 'https://database-cc4b8-default-rtdb.europe-west1.firebasedatabase.app' };
   const app = initializeApp(firebaseConfig);
@@ -333,12 +336,11 @@
     btnStart.disabled = true;
     btnStart.textContent = 'Тексеру...';
     try {
-      const { get } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js');
       const snapshot = await get(ref(db, 'taken'));
       const data = snapshot.val() || {};
       const existing = Object.values(data).find(r => r.name && r.name.toLowerCase() === studentName.toLowerCase());
       if (existing) {
-        nameError.textContent = `Билет уже выдан: № ${existing.ticket}. Повторный выбор запрещён.`;
+        nameError.textContent = 'Билет уже выдан: № ' + existing.ticket + '. Повторный выбор запрещён.';
         btnStart.disabled = false;
         btnStart.textContent = 'Кіру / Войти →';
         return;
@@ -431,12 +433,11 @@
 
     // Double-check Firebase that name is not already there
     try {
-      const { get } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js');
       const snapshot = await get(ref(db, 'taken'));
       const data = snapshot.val() || {};
       const existing = Object.values(data).find(r => r.name && r.name.toLowerCase() === studentName.toLowerCase());
       if (existing) {
-        snapStatus.textContent = `⛔ Билет № ${existing.ticket} уже был выдан на это имя!`;
+        snapStatus.textContent = '⛔ Билет № ' + existing.ticket + ' уже был выдан на это имя!';
         setTimeout(closeModal, 2500);
         return;
       }

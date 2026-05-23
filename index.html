@@ -200,7 +200,8 @@
       <div class="log-empty" id="log-empty">Әлі ешкім таңдаған жоқ</div>
     </div>
     <div class="sidebar-footer">
-      <button class="btn-reset" onclick="resetAll()">↺ Сбросить</button>
+      <button class="btn-reset" onclick="resetAll()" style="flex:1">↺ Сбросить данные</button>
+      <button class="btn-reset" onclick="finishExam()" style="flex:1;border-color:rgba(62,207,142,0.3);color:#3ecf8e">✓ Завершить экзамен</button>
     </div>
   </div>
 </div>
@@ -324,9 +325,27 @@
   }
   nameInput.addEventListener('keydown', e => { if (e.key === 'Enter' && !btnStart.disabled) startExam(); });
 
-  window.startExam = function() {
+  window.startExam = async function() {
     studentName = nameInput.value.trim();
     if (!studentName) return;
+
+    // Check Firebase if this name already has a ticket
+    btnStart.disabled = true;
+    btnStart.textContent = 'Тексеру...';
+    try {
+      const { get } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js');
+      const snapshot = await get(ref(db, 'taken'));
+      const data = snapshot.val() || {};
+      const existing = Object.values(data).find(r => r.name && r.name.toLowerCase() === studentName.toLowerCase());
+      if (existing) {
+        nameError.textContent = `Билет уже выдан: № ${existing.ticket}. Повторный выбор запрещён.`;
+        btnStart.disabled = false;
+        btnStart.textContent = 'Кіру / Войти →';
+        return;
+      }
+    } catch(e) {}
+
+    btnStart.textContent = 'Кіру / Войти →';
     document.getElementById('screen-name').classList.add('hidden');
     document.getElementById('student-name-header').textContent = studentName;
   };
@@ -408,8 +427,22 @@
     const num = currentNum;
     if (!num || taken.has(num)) return;
     btnDownload.disabled = true;
-    snapStatus.textContent = '📸 Делаем снимок...';
+    snapStatus.textContent = '🔍 Проверка...';
 
+    // Double-check Firebase that name is not already there
+    try {
+      const { get } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js');
+      const snapshot = await get(ref(db, 'taken'));
+      const data = snapshot.val() || {};
+      const existing = Object.values(data).find(r => r.name && r.name.toLowerCase() === studentName.toLowerCase());
+      if (existing) {
+        snapStatus.textContent = `⛔ Билет № ${existing.ticket} уже был выдан на это имя!`;
+        setTimeout(closeModal, 2500);
+        return;
+      }
+    } catch(e) {}
+
+    snapStatus.textContent = '📸 Делаем снимок...';
     const photo = takeSnapshot();
     const t = new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
     const date = new Date().toLocaleDateString('ru-RU');
@@ -424,11 +457,8 @@
       snapStatus.textContent = '⚠ Ошибка сохранения';
     }
 
-    // Lock this device
     hasChosen = true;
     localStorage.setItem('exam_chosen', JSON.stringify({ ticket: pad(num), name: studentName }));
-
-    // Open file
     window.open(filename(num), '_blank');
     showAlert(num);
     setTimeout(closeModal, 1000);
@@ -486,13 +516,45 @@
     document.getElementById('photo-viewer').classList.remove('open');
   };
 
-  // RESET
+  // RESET — полный сброс данных Firebase (без сброса счётчиков UI)
   window.resetAll = async function() {
-    if (!confirm('Сбросить всё? Это удалит все записи из Firebase.')) return;
+    if (!confirm('Сбросить все данные Firebase? Записи о билетах будут удалены.')) return;
     await remove(ref(db, 'taken'));
     logged.clear();
     logEntries.innerHTML = '<div class="log-empty" id="log-empty">Әлі ешкім таңдаған жоқ</div>';
     alertBar.classList.remove('visible');
+    localStorage.removeItem('exam_chosen');
+  };
+
+  // FINISH EXAM — завершить экзамен, обнулить всё включая счётчики
+  window.finishExam = async function() {
+    if (!confirm('Завершить экзамен? Все карточки вернутся, счётчики обнулятся. Данные журнала в Firebase сохранятся.')) return;
+    // Сбрасываем UI
+    taken.clear();
+    logged.clear();
+    hasChosen = false;
+    studentName = '';
+    currentNum = null;
+    // Показываем все карточки обратно
+    document.querySelectorAll('.ticket-card').forEach(c => c.classList.remove('vanishing', 'gone'));
+    // Обнуляем счётчики
+    document.getElementById('stat-taken').textContent     = 0;
+    document.getElementById('stat-remaining').textContent = TOTAL;
+    document.getElementById('sc-taken').textContent       = 0;
+    document.getElementById('sc-remaining').textContent   = TOTAL;
+    // Очищаем журнал UI
+    logEntries.innerHTML = '<div class="log-empty" id="log-empty">Экзамен завершён. Данные сохранены в Firebase.</div>';
+    alertBar.classList.remove('visible');
+    // Удаляем данные Firebase
+    await remove(ref(db, 'taken'));
+    // Сбрасываем localStorage для всех (только текущий браузер)
+    localStorage.removeItem('exam_chosen');
+    // Возвращаем на экран пароля
+    document.getElementById('screen-password').classList.remove('hidden');
+    document.getElementById('screen-name').classList.add('hidden');
+    document.getElementById('screen-done').classList.add('hidden');
+    document.getElementById('student-name-header').textContent = 'Билетті таңдаңыз';
+    alert('Экзамен завершён! Данные сохранены в Firebase Console.');
   };
 </script>
 </body>
